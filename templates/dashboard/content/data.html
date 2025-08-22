@@ -1,7 +1,7 @@
 <main class="h-full overflow-y-auto">
   <div class="container px-6 mx-auto grid">
     <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
-    {{ title }}
+      {{ title }}
     </h2>
 
     <!-- Indicadores -->
@@ -14,7 +14,7 @@
         </div>
         <div>
           <p class="mb-2 text-sm font-medium text-gray-600 dark:text-gray-400">
-            Número total de respuestas
+            Número total de posts
           </p>
           <p class="text-lg font-semibold text-gray-700 dark:text-gray-200">
             {{ total_responses }}
@@ -29,7 +29,7 @@
         </div>
         <div>
           <p class="mb-2 text-sm font-medium text-gray-600 dark:text-gray-400">
-            Primer título
+            Número de usuarios únicos
           </p>
           <p class="text-lg font-semibold text-gray-700 dark:text-gray-200">
             {{ indicator_2 }}
@@ -44,83 +44,74 @@
         </div>
         <div>
           <p class="mb-2 text-sm font-medium text-gray-600 dark:text-gray-400">
-            Segundo título
+            Promedio longitud títulos
           </p>
           <p class="text-lg font-semibold text-gray-700 dark:text-gray-200">
             {{ indicator_3 }}
           </p>
         </div>
+      </div>
+
+      <!-- Indicador 4 -->
+      <div class="flex items-center p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+        <div class="p-3 mr-4 text-teal-500 bg-teal-100 rounded-full dark:text-teal-100 dark:bg-teal-500">
+          <!-- icono SVG -->
+        </div>
+        <div>
+          <p class="mb-2 text-sm font-medium text-gray-600 dark:text-gray-400">
+            ID del post más reciente
+          </p>
+          <p class="text-lg font-semibold text-gray-700 dark:text-gray-200">
+            {{ indicator_4 }}
+          </p>
+        </div>
+      </div>
+
     </div>
 
-    <!-- Indicador 4 -->
-    <div class="flex items-center p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
-      <div class="p-3 mr-4 text-teal-500 bg-teal-100 rounded-full dark:text-teal-100 dark:bg-teal-500">
-        <!-- icono SVG -->
-      </div>
-      <div>
-        <p class="mb-2 text-sm font-medium text-gray-600 dark:text-gray-400">
-          Tercer título
-        </p>
-        <p class="text-lg font-semibold text-gray-700 dark:text-gray-200">
-          {{ indicator_4 }}
-        </p>
-      </div>
-    </div>
-
-  </div>
-
+    <!-- Tabla -->
     <div class="grid gap-6 mb-8 md:grid-cols-2">
-
-      <!-- BEGIN - Datos -->
       <div class="row-span-1 w-full overflow-hidden rounded-lg shadow-xs mb-6">
-
         <div class="w-full overflow-x-auto">
           <table class="w-full whitespace-no-wrap">
             <thead>
-              <tr
-                class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+              <tr class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
                 <th class="px-4 py-3">ID</th>
-                <th class="px-4 py-3">Title</th>
+                <th class="px-4 py-3">Título</th>
               </tr>
             </thead>
             <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
-
-              <!-- START - respuestas -->
-                {% for post in posts %}
-                  <tr class="text-gray-700 dark:text-gray-400">
-                    <td class="px-4 py-3 text-sm">{{ post.id }}</td>
-                    <td class="px-4 py-3 text-sm">{{ post.title }}</td>
-                  </tr>
-                {% endfor %}
-              </tr>
-              <!-- END - respuestas -->
-
+              {% for post in posts %}
+                <tr class="text-gray-700 dark:text-gray-400">
+                  <td class="px-4 py-3 text-sm">{{ post.id }}</td>
+                  <td class="px-4 py-3 text-sm">{{ post.title }}</td>
+                </tr>
+              {% endfor %}
             </tbody>
           </table>
         </div>
-        <div
-          class="grid px-4 py-3 text-xs font-semibold tracking-wide text-gray-500 uppercase border-t dark:border-gray-700 bg-gray-50 sm:grid-cols-9 dark:text-gray-400 dark:bg-gray-800">
+        <div class="grid px-4 py-3 text-xs font-semibold tracking-wide text-gray-500 uppercase border-t dark:border-gray-700 bg-gray-50 sm:grid-cols-9 dark:text-gray-400 dark:bg-gray-800">
           <span class="flex items-center col-span-3">
-            <!-- # total de respuestas -->
             {{ total_responses }} respuestas
           </span>
         </div>
       </div>
-      <!-- END - Datos -->
 
-      <!-- BEGIN - Gráficos -->
+      <!-- Gráfico -->
       <div class="row-span-1 grid gap-6 mb-8 md:grid-cols-12">
         <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
           <h4 class="mb-4 font-semibold text-gray-800 dark:text-gray-300">
-            Título del gráfico
+            Posts por usuario
           </h4>
+          <script id="chart-data-json" type="application/json">
+            {
+              "labels": {{ chart_labels|safe }},
+              "data": {{ chart_values|safe }}
+            }
+          </script>
           <canvas id="line"></canvas>
-
         </div>
       </div>
-      <!-- END - Gráficos -->
-
     </div>
-
   </div>
 </main>

@@ -1,9 +1,8 @@
 # dashboard/views.py
 from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 import requests
 from django.conf import settings
-from django.contrib.auth.decorators import login_required, permission_required
 
 @login_required
 @permission_required('dashboard.index_viewer', raise_exception=True)
@@ -12,23 +11,39 @@ def index(request):
     response = requests.get(settings.API_URL)
     posts = response.json()
 
-    # Número total de respuestas
+    # Número total de respuestas (posts)
     total_responses = len(posts)
 
-    # Ejemplo de indicadores: podemos usar los primeros 4 posts para mostrar títulos
-    # o generar datos ficticios para indicadores adicionales
-    indicator_2 = len(posts[0]['body'].split()) if len(posts) > 0 else 0
-    indicator_3 = len(posts[1]['body'].split()) if len(posts) > 1 else 0
-    indicator_4 = len(posts[2]['body'].split()) if len(posts) > 2 else 0
+    # Número total de usuarios únicos
+    total_users = len(set(post['userId'] for post in posts))
 
-    # Datos para el gráfico: número de caracteres de cada título
-    chart_labels = [post['title'][:15] for post in posts[:10]]  # primeras 10 publicaciones
-    chart_values = [len(post['title']) for post in posts[:10]]
+    # Longitud promedio de títulos
+    avg_title_length = sum(len(post['title']) for post in posts) / total_responses
+
+    # ID máximo de post (último creado en jsonplaceholder)
+    max_post_id = max(post['id'] for post in posts)
+
+    # --------- INDICADORES PERSONALIZADOS ----------
+    indicator_2 = total_users
+    indicator_3 = round(avg_title_length, 2)
+    indicator_4 = max_post_id
+
+    # --------- GRÁFICO: Cantidad de posts por usuario ---------
+    posts_per_user = {}
+    for post in posts:
+        uid = post['userId']
+        posts_per_user[uid] = posts_per_user.get(uid, 0) + 1
+
+    chart_labels = list(posts_per_user.keys())   # IDs de usuario
+    chart_values = list(posts_per_user.values()) # Nº de posts por usuario
 
     context = {
-        'title': "Landing Page' Dashboard",
+        'title': "Dashboard de JSON Placeholder",
         'total_responses': total_responses,
-        'posts': posts[:10],  # limitar a 10 para la tabla
+        'indicator_2': indicator_2,
+        'indicator_3': indicator_3,
+        'indicator_4': indicator_4,
+        'posts': posts[:10],       # mostramos solo 10 en la tabla
         'chart_labels': chart_labels,
         'chart_values': chart_values,
     }
