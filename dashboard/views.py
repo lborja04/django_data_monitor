@@ -38,7 +38,7 @@ def index(request):
     chart_values = list(posts_per_user.values()) # Nº de posts por usuario
 
     context = {
-        'title': "Dashboard de JSON Placeholder",
+        'title': "Landing Page Dashboard",
         'total_responses': total_responses,
         'indicator_2': indicator_2,
         'indicator_3': indicator_3,
